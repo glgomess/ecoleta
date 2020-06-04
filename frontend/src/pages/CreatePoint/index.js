@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.css";
 import logo from "../../assets/logo.svg";
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { Map, TileLayer, Marker } from "react-leaflet";
+import api from "../../services/api";
 
 const CreatePoint = () => {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    api.get("items").then((response) => {
+      setItems(response.data.items);
+    });
+  }, []);
+
   return (
     <div id="page-create-point">
       <header>
@@ -77,31 +86,14 @@ const CreatePoint = () => {
         </fieldset>
 
         <ul className="items-grid">
-          <li>
-            <img src="http://localhost:3333/uploads/baterias.svg" alt="Teste" />
-            <span>Baterias</span>
-          </li>
-          <li>
-            <img src="http://localhost:3333/uploads/baterias.svg" alt="Teste" />
-            <span>Baterias</span>
-          </li>
-          <li>
-            <img src="http://localhost:3333/uploads/baterias.svg" alt="Teste" />
-            <span>Baterias</span>
-          </li>
-          <li>
-            <img src="http://localhost:3333/uploads/baterias.svg" alt="Teste" />
-            <span>Baterias</span>
-          </li>
-          <li>
-            <img src="http://localhost:3333/uploads/baterias.svg" alt="Teste" />
-            <span>Baterias</span>
-          </li>
-          <li>
-            <img src="http://localhost:3333/uploads/baterias.svg" alt="Teste" />
-            <span>Baterias</span>
-          </li>
+          {items.map((item) => (
+            <li key={item.id}>
+              <img src={item.imgUrl} alt={item.title} />
+              <span>{item.title}</span>
+            </li>
+          ))}
         </ul>
+
         <button type="submit">Cadastra ponto de Coleta</button>
       </form>
     </div>
